@@ -43,15 +43,13 @@ func (s *service) GetAll(context.Context) ([]*entity.Superheroe, error) {
 
 //GetAll return a single superheroe
 func (s *service) GetByID(_ context.Context, id string) (*entity.Superheroe, error) {
-	resp := s.repo.GetSuperheroes()
-	response := new(entity.Superheroe)
-	for _, v := range resp {
-		if v.ID == id {
-			response = v
-		}
+	resp := s.repo.GetSuperheroeById(id)
+	if resp == nil {
+		return nil, fmt.Errorf("no superheroe with id %v found", id)
 	}
+
 	s.logger.Log("get superheroe by id", id)
-	return response, nil
+	return resp, nil
 }
 
 //GetAll add a new superheroe

@@ -39,7 +39,11 @@ func makeGetSuperheroesEndpoint(svc service.Service) endpoint.Endpoint {
 func makeGetSuperheroeByIdEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
 		req := in.(entity.GetIDRequest)
-		s, _ := svc.GetByID(ctx, req.Id)
+		s, err := svc.GetByID(ctx, req.Id)
+		if err != nil {
+			return nil, err
+		}
+
 		return entity.SuperheroeResponse{Superheroe: s}, nil
 	}
 }
@@ -47,7 +51,11 @@ func makeGetSuperheroeByIdEndpoint(svc service.Service) endpoint.Endpoint {
 func makeAddSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
 		req := in.(entity.Superheroe)
-		s, _ := svc.Add(ctx, &req)
+		s, err := svc.Add(ctx, &req)
+		if err != nil {
+			return nil, err
+		}
+
 		return entity.SuperheroeResponse{Superheroe: s, Msg: "superheroe added"}, nil
 	}
 }
@@ -55,7 +63,11 @@ func makeAddSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 func makeEditSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
 		req := in.(entity.Superheroe)
-		s, _ := svc.Edit(ctx, &req)
+		s, err := svc.Edit(ctx, &req)
+		if err != nil {
+			return nil, err
+		}
+
 		return entity.SuperheroeResponse{Superheroe: s, Msg: "superheroe updated"}, nil
 	}
 }
@@ -63,7 +75,11 @@ func makeEditSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 func makeDeleteSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
 		req := in.(entity.GetIDRequest)
-		s, _ := svc.Delete(ctx, req.Id)
+		s, err := svc.Delete(ctx, req.Id)
+		if err != nil {
+			return nil, err
+		}
+
 		return entity.NormalResponse{Ok: s}, nil
 	}
 }
