@@ -1,2 +1,10 @@
 # Vscode generated
 /.vscode/
+
+# Build
+/build/
+
+coverfile_out
+
+# Vendor
+/vendor/

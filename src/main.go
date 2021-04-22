@@ -9,8 +9,8 @@ import (
 	"os/signal"
 	"runtime"
 	"superheroe-gokit-api/src/endpoint"
+	server "superheroe-gokit-api/src/http"
 	"superheroe-gokit-api/src/repository"
-	"superheroe-gokit-api/src/server"
 	"superheroe-gokit-api/src/service"
 	"syscall"
 
