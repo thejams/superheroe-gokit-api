@@ -79,10 +79,10 @@ func (s *service) Edit(_ context.Context, c *entity.Superheroe) (*entity.Superhe
 		return nil, fmt.Errorf("Superheroe with ID %v does not exist", c.ID)
 	}
 
-	s.repo.EditSuperheroe(c)
-	s.logger.Log("edit superheroe", c.ID, c.Name)
+	heroe := s.repo.EditSuperheroe(c)
+	s.logger.Log("edit superheroe", heroe.ID, heroe.Name)
 
-	return c, nil
+	return heroe, nil
 }
 
 //Delete delete a superheroe
@@ -95,8 +95,8 @@ func (s *service) Delete(_ context.Context, id string) (string, error) {
 		return "", fmt.Errorf("Superheroe with ID %v does not exist", id)
 	}
 
-	s.repo.DeleteSuperheroe(id)
+	response := s.repo.DeleteSuperheroe(id)
 	s.logger.Log("delete superheroe", id)
 
-	return "Character deleted " + id, nil
+	return response, nil
 }

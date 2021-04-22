@@ -16,7 +16,7 @@ type Repository interface {
 	GetSuperheroeById(id string) *entity.Superheroe
 	AddSuperheroe(c *entity.Superheroe) *entity.Superheroe
 	EditSuperheroe(c *entity.Superheroe) *entity.Superheroe
-	DeleteSuperheroe(id string)
+	DeleteSuperheroe(id string) string
 	ClearRepository()
 }
 
@@ -72,12 +72,13 @@ func (r *repository) EditSuperheroe(c *entity.Superheroe) *entity.Superheroe {
 }
 
 //DeleteSuperheroe remove a superheroe from the superheroes slice
-func (r *repository) DeleteSuperheroe(id string) {
+func (r *repository) DeleteSuperheroe(id string) string {
 	for index, value := range resp {
 		if value.ID == id {
 			resp = append(resp[:index], resp[index+1:]...)
 		}
 	}
+	return "Character deleted " + id
 }
 
 //ClearRepository remove all superheroes from the superheroes slice
