@@ -8,6 +8,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	batman = entity.Superheroe{
+		ID:    "1",
+		Name:  "Batman",
+		Alias: "Bruce Wayne",
+	}
+	superman = entity.Superheroe{
+		ID:    "2",
+		Name:  "Superman",
+		Alias: "Clark Kent",
+	}
+)
+
 func TestVerifySuperheroe(t *testing.T) {
 	t.Run("should return error when name is already taken", func(t *testing.T) {
 		thor := entity.Superheroe{
@@ -41,16 +54,6 @@ func TestVerifySuperheroe(t *testing.T) {
 	})
 
 	t.Run("should not return error when a new heroe is verified", func(t *testing.T) {
-		batman := entity.Superheroe{
-			ID:    "1",
-			Name:  "Batman",
-			Alias: "Bruce Wayne",
-		}
-		superman := entity.Superheroe{
-			ID:    "2",
-			Name:  "Superman",
-			Alias: "Clark Kent",
-		}
 		sh := []*entity.Superheroe{&batman}
 		err := util.VerifySuperheroe(sh, superman)
 
@@ -82,4 +85,18 @@ func TestSuperheroeExists(t *testing.T) {
 
 		assert.False(t, resp)
 	})
+}
+
+func BenchmarkVerifySuperheroe(b *testing.B) {
+	sh := []*entity.Superheroe{&batman}
+	for i := 0; i < b.N; i++ {
+		util.VerifySuperheroe(sh, superman)
+	}
+}
+
+func BenchmarkSuperheroeExists(b *testing.B) {
+	sh := []*entity.Superheroe{&batman}
+	for i := 0; i < b.N; i++ {
+		util.SuperheroeExists(sh, "3")
+	}
 }

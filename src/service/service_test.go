@@ -166,3 +166,65 @@ func TestDelete(t *testing.T) {
 		assert.Equal(t, "Character deleted 1", result)
 	})
 }
+
+func BenchmarkGetAll(b *testing.B) {
+	mockRepo := new(repoMock.Repository)
+	svc := service.NewService(mockRepo, logger)
+	mockRepo.On("GetSuperheroeById", "1").Return(nil)
+
+	for i := 0; i < b.N; i++ {
+		svc.GetByID(context.TODO(), "1")
+	}
+}
+
+func BenchmarkByID(b *testing.B) {
+	mockRepo := new(repoMock.Repository)
+	svc := service.NewService(mockRepo, logger)
+	mockRepo.On("GetSuperheroes").Return([]*entity.Superheroe{&batman})
+
+	for i := 0; i < b.N; i++ {
+		svc.GetAll(context.TODO())
+	}
+}
+
+func BenchmarkAdd(b *testing.B) {
+	mockRepo := new(repoMock.Repository)
+	svc := service.NewService(mockRepo, logger)
+	nh := entity.Superheroe{
+		Name:  "Superman",
+		Alias: "Clark Kent",
+	}
+	mockRepo.On("GetSuperheroes").Return(sh)
+	mockRepo.On("AddSuperheroe", &nh).Return(&nh)
+
+	for i := 0; i < b.N; i++ {
+		svc.Add(context.TODO(), &nh)
+	}
+}
+
+func BenchmarkEdit(b *testing.B) {
+	mockRepo := new(repoMock.Repository)
+	svc := service.NewService(mockRepo, logger)
+	nh := entity.Superheroe{
+		ID:    "1",
+		Name:  "Superman",
+		Alias: "Clark Kent",
+	}
+	mockRepo.On("EditSuperheroe", &nh).Return(&nh)
+	mockRepo.On("GetSuperheroes").Return(sh)
+
+	for i := 0; i < b.N; i++ {
+		svc.Edit(context.TODO(), &nh)
+	}
+}
+
+func BenchmarkDelete(b *testing.B) {
+	mockRepo := new(repoMock.Repository)
+	svc := service.NewService(mockRepo, logger)
+	mockRepo.On("GetSuperheroes").Return(sh)
+	mockRepo.On("DeleteSuperheroe", "1").Return("Character deleted 1")
+
+	for i := 0; i < b.N; i++ {
+		svc.Delete(context.TODO(), "1")
+	}
+}
