@@ -11,4 +11,3 @@ spec:
         backend:
           serviceName: superheroe-gokit-api-svc
           servicePort: 8080
-

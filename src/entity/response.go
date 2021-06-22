@@ -1,7 +1,7 @@
 package entity
 
 type NormalResponse struct {
-	Ok string `json:"ok"`
+	Ok string `json:"msg"`
 }
 
 type SuperheroesResponse struct {
@@ -12,5 +12,3 @@ type SuperheroeResponse struct {
 	Msg        string      `json:"msg"`
 	Superheroe *Superheroe `json:"superheroe"`
 }
-
-type EmptyStruct struct{}

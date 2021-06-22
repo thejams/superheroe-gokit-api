@@ -18,6 +18,11 @@ func NewHTTPServer(ctx context.Context, endpoints endpoint.Endpoints) http.Handl
 	r := mux.NewRouter()
 	r.Use(commonMiddleware)
 
+	r.Methods("GET").Path("/health").Handler(httptransport.NewServer(
+		endpoints.Health,
+		DecodeEmptyRequest,
+		encodeResponse,
+	))
 	r.Methods("GET").Path("/superheroes/{id}").Handler(httptransport.NewServer(
 		endpoints.GetByID,
 		decodeIDRequest,
@@ -85,7 +90,7 @@ func decodeIDBodyRequest(ctx context.Context, r *http.Request) (interface{}, err
 }
 
 func DecodeEmptyRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var appRequest entity.EmptyStruct
+	var appRequest interface{}
 	return &appRequest, nil
 }
 

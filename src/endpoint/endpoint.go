@@ -16,6 +16,7 @@ type Endpoints struct {
 	Add     endpoint.Endpoint
 	Edit    endpoint.Endpoint
 	Delete  endpoint.Endpoint
+	Health  endpoint.Endpoint
 }
 
 //MakeEndpoints initialice a new set of endpoints
@@ -26,6 +27,13 @@ func MakeEndpoints(s service.Service) Endpoints {
 		Add:     makeAddSuperheroeEndpoint(s),
 		Edit:    makeEditSuperheroeEndpoint(s),
 		Delete:  makeDeleteSuperheroeEndpoint(s),
+		Health:  makeHealthEndpoint(s),
+	}
+}
+
+func makeHealthEndpoint(svc service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, in interface{}) (interface{}, error) {
+		return entity.NormalResponse{Ok: "service up"}, nil
 	}
 }
 
