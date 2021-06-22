@@ -57,10 +57,10 @@ func decodeRequest(ctx context.Context, r *http.Request) (interface{}, error) {
 }
 
 func decodeIDRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req entity.GetIDRequest
+	var req entity.IDRequest
 	vars := mux.Vars(r)
 
-	req = entity.GetIDRequest{
+	req = entity.IDRequest{
 		Id: vars["id"],
 	}
 	return req, nil
@@ -70,7 +70,6 @@ func decodeIDBodyRequest(ctx context.Context, r *http.Request) (interface{}, err
 	var req entity.Superheroe
 	vars := mux.Vars(r)
 
-	// field := reflect.ValueOf(vars["id"]).Field(0)
 	id := vars["id"]
 	if id == "" {
 		return nil, errors.New("id is required")

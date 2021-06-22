@@ -38,7 +38,7 @@ func makeGetSuperheroesEndpoint(svc service.Service) endpoint.Endpoint {
 
 func makeGetSuperheroeByIdEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
-		req := in.(entity.GetIDRequest)
+		req := in.(entity.IDRequest)
 		s, err := svc.GetByID(ctx, req.Id)
 		if err != nil {
 			return nil, err
@@ -74,7 +74,7 @@ func makeEditSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 
 func makeDeleteSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
-		req := in.(entity.GetIDRequest)
+		req := in.(entity.IDRequest)
 		s, err := svc.Delete(ctx, req.Id)
 		if err != nil {
 			return nil, err

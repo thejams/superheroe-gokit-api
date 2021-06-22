@@ -7,3 +7,8 @@ type Superheroe struct {
 	Name  string `json:"name"`
 	Alias string `json:"alias"`
 }
+
+//IDRequest
+type IDRequest struct {
+	Id string `json:"id"`
+}

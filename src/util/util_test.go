@@ -1,6 +1,7 @@
 package util_test
 
 import (
+	"fmt"
 	"superheroe-gokit-api/src/entity"
 	"superheroe-gokit-api/src/util"
 	"testing"
@@ -99,4 +100,14 @@ func BenchmarkSuperheroeExists(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		util.SuperheroeExists(sh, "3")
 	}
+}
+
+func ExampleSuperheroeExists() {
+	sh := []*entity.Superheroe{&batman}
+	fmt.Println(util.SuperheroeExists(sh, "1"))
+	fmt.Println(util.SuperheroeExists(sh, "2"))
+	//Output:
+	//true
+	//
+	//false
 }

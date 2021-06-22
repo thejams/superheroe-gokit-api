@@ -1,7 +1,7 @@
 # Start from golang base image
 FROM golang:alpine
 
-# Build proyect
+# Install make to alpine image
 RUN apk update && apk add --no-cache git && apk add --no-cache make
 
 # Set the current working directory inside the container 

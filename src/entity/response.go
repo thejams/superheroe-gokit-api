@@ -1,9 +1,5 @@
 package entity
 
-type GetIDRequest struct {
-	Id string `json:"id"`
-}
-
 type NormalResponse struct {
 	Ok string `json:"ok"`
 }
