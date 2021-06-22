@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: superheroe-gokit-api-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend-superheroe-gokit-api
+  ports:
+   -  name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP

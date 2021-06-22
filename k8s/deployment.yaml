@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superheroe-gokit-api-deploy
+  labels:
+    app: backend-superheroe-gokit-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-superheroe-gokit-api
+  template:
+    metadata:
+      labels:
+        app: backend-superheroe-gokit-api
+    spec:
+      containers:
+      - name: superheroe-gokit-api
+        image: superheroe-gokit-api
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
