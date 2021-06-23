@@ -2,6 +2,7 @@
 package repository
 
 import (
+	"fmt"
 	"superheroe-gokit-api/src/entity"
 
 	"github.com/go-kit/kit/log"
@@ -13,10 +14,10 @@ var resp []*entity.Superheroe
 //Repository main repository interface
 type Repository interface {
 	GetSuperheroes() []*entity.Superheroe
-	GetSuperheroeById(id string) *entity.Superheroe
+	GetSuperheroeById(id string) (*entity.Superheroe, error)
 	AddSuperheroe(c *entity.Superheroe) *entity.Superheroe
-	EditSuperheroe(c *entity.Superheroe) *entity.Superheroe
-	DeleteSuperheroe(id string) string
+	EditSuperheroe(c *entity.Superheroe) (*entity.Superheroe, error)
+	DeleteSuperheroe(id string) (string, error)
 	ClearRepository()
 }
 
@@ -45,13 +46,13 @@ func (r *repository) GetSuperheroes() []*entity.Superheroe {
 }
 
 //GetSuperheroeById returns a single superheroe from the slice
-func (r *repository) GetSuperheroeById(i string) *entity.Superheroe {
+func (r *repository) GetSuperheroeById(i string) (*entity.Superheroe, error) {
 	for _, value := range resp {
 		if value.ID == i {
-			return value
+			return value, nil
 		}
 	}
-	return nil
+	return nil, fmt.Errorf("no superheroe with id %v found", i)
 }
 
 //AddSuperheroe add a new superheroe to the superheroes slice
@@ -61,24 +62,26 @@ func (r *repository) AddSuperheroe(c *entity.Superheroe) *entity.Superheroe {
 }
 
 //EditCharacter edit a superheroe with new information
-func (r *repository) EditSuperheroe(c *entity.Superheroe) *entity.Superheroe {
+func (r *repository) EditSuperheroe(c *entity.Superheroe) (*entity.Superheroe, error) {
 	for index, value := range resp {
 		if value.ID == c.ID {
 			resp = append(resp[:index], resp[index+1:]...)
 			resp = append(resp, c)
+			return c, nil
 		}
 	}
-	return c
+	return nil, fmt.Errorf("Superheroe with ID %v does not exist", c.ID)
 }
 
 //DeleteSuperheroe remove a superheroe from the superheroes slice
-func (r *repository) DeleteSuperheroe(id string) string {
+func (r *repository) DeleteSuperheroe(id string) (string, error) {
 	for index, value := range resp {
 		if value.ID == id {
 			resp = append(resp[:index], resp[index+1:]...)
+			return "Character deleted " + id, nil
 		}
 	}
-	return "Character deleted " + id
+	return "", fmt.Errorf("Superheroe with ID %v does not exist", id)
 }
 
 //ClearRepository remove all superheroes from the superheroes slice

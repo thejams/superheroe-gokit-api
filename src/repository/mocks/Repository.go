@@ -35,7 +35,7 @@ func (_m *Repository) ClearRepository() {
 }
 
 // DeleteSuperheroe provides a mock function with given fields: id
-func (_m *Repository) DeleteSuperheroe(id string) string {
+func (_m *Repository) DeleteSuperheroe(id string) (string, error) {
 	ret := _m.Called(id)
 
 	var r0 string
@@ -45,11 +45,18 @@ func (_m *Repository) DeleteSuperheroe(id string) string {
 		r0 = ret.Get(0).(string)
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // EditSuperheroe provides a mock function with given fields: c
-func (_m *Repository) EditSuperheroe(c *entity.Superheroe) *entity.Superheroe {
+func (_m *Repository) EditSuperheroe(c *entity.Superheroe) (*entity.Superheroe, error) {
 	ret := _m.Called(c)
 
 	var r0 *entity.Superheroe
@@ -61,11 +68,18 @@ func (_m *Repository) EditSuperheroe(c *entity.Superheroe) *entity.Superheroe {
 		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(*entity.Superheroe) error); ok {
+		r1 = rf(c)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetSuperheroeById provides a mock function with given fields: id
-func (_m *Repository) GetSuperheroeById(id string) *entity.Superheroe {
+func (_m *Repository) GetSuperheroeById(id string) (*entity.Superheroe, error) {
 	ret := _m.Called(id)
 
 	var r0 *entity.Superheroe
@@ -77,7 +91,14 @@ func (_m *Repository) GetSuperheroeById(id string) *entity.Superheroe {
 		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // GetSuperheroes provides a mock function with given fields:

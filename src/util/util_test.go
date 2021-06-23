@@ -108,6 +108,5 @@ func ExampleSuperheroeExists() {
 	fmt.Println(util.SuperheroeExists(sh, "2"))
 	//Output:
 	//true
-	//
 	//false
 }

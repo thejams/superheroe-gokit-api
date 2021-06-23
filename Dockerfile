@@ -13,7 +13,4 @@ COPY . .
 # Build proyect
 RUN make mod && make build
 
-# Expose port 8080 in the container
-EXPOSE 8080
-
 CMD ["./build/bin/superheroe-gokit-api"]

@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"superheroe-gokit-api/src/entity"
 	repoMock "superheroe-gokit-api/src/repository/mocks"
@@ -54,7 +55,7 @@ func TestGetByID(t *testing.T) {
 	t.Run("should return error when no superheroe is found", func(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
-		mockRepo.On("GetSuperheroeById", "1").Return(nil)
+		mockRepo.On("GetSuperheroeById", "1").Return(nil, fmt.Errorf("no superheroe with id %v found", 1))
 		_, err := svc.GetByID(context.TODO(), "1")
 
 		assert.NotNil(t, err)
@@ -64,7 +65,7 @@ func TestGetByID(t *testing.T) {
 	t.Run("should return a superheroe", func(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
-		mockRepo.On("GetSuperheroeById", "1").Return(&batman)
+		mockRepo.On("GetSuperheroeById", "1").Return(&batman, nil)
 		result, _ := svc.GetByID(context.TODO(), "1")
 
 		assert.Equal(t, "Batman", result.Name)
@@ -113,14 +114,14 @@ func TestAdd(t *testing.T) {
 
 func TestEdit(t *testing.T) {
 	t.Run("should return error when heroe does not exists", func(t *testing.T) {
-		mockRepo := new(repoMock.Repository)
-		svc := service.NewService(mockRepo, logger)
-		mockRepo.On("GetSuperheroes").Return(sh)
 		nh := entity.Superheroe{
 			ID:    "2",
 			Name:  "Superman",
 			Alias: "Clark Kent",
 		}
+		mockRepo := new(repoMock.Repository)
+		svc := service.NewService(mockRepo, logger)
+		mockRepo.On("EditSuperheroe", &nh).Return(nil, fmt.Errorf("Superheroe with ID %v does not exist", 2))
 		_, err := svc.Edit(context.TODO(), &nh)
 
 		assert.NotNil(t, err)
@@ -135,8 +136,7 @@ func TestEdit(t *testing.T) {
 			Name:  "Superman",
 			Alias: "Clark Kent",
 		}
-		mockRepo.On("EditSuperheroe", &nh).Return(&nh)
-		mockRepo.On("GetSuperheroes").Return(sh)
+		mockRepo.On("EditSuperheroe", &nh).Return(&nh, nil)
 		result, _ := svc.Edit(context.TODO(), &nh)
 
 		assert.Equal(t, "Superman", result.Name)
@@ -148,8 +148,7 @@ func TestDelete(t *testing.T) {
 	t.Run("should return error when heroe does not exists", func(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
-		mockRepo.On("GetSuperheroes").Return(sh)
-		mockRepo.On("GetSuperheroes").Return(sh)
+		mockRepo.On("DeleteSuperheroe", "2").Return("", fmt.Errorf("Superheroe with ID %v does not exist", 2))
 		_, err := svc.Delete(context.TODO(), "2")
 
 		assert.NotNil(t, err)
@@ -159,8 +158,7 @@ func TestDelete(t *testing.T) {
 	t.Run("should delete a superheroe", func(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
-		mockRepo.On("GetSuperheroes").Return(sh)
-		mockRepo.On("DeleteSuperheroe", "1").Return("Character deleted 1")
+		mockRepo.On("DeleteSuperheroe", "1").Return("Character deleted 1", nil)
 		result, _ := svc.Delete(context.TODO(), "1")
 
 		assert.Equal(t, "Character deleted 1", result)

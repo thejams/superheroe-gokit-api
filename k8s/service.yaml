@@ -3,7 +3,6 @@ apiVersion: v1
 metadata:
   name: superheroe-gokit-api-svc
 spec:
-  type: LoadBalancer
   selector:
     app: backend-superheroe-gokit-api
   ports:

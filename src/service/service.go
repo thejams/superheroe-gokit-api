@@ -3,7 +3,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"superheroe-gokit-api/src/entity"
 	"superheroe-gokit-api/src/repository"
 	"superheroe-gokit-api/src/util"
@@ -43,12 +42,13 @@ func (s *service) GetAll(context.Context) ([]*entity.Superheroe, error) {
 
 //GetAll return a single superheroe
 func (s *service) GetByID(_ context.Context, id string) (*entity.Superheroe, error) {
-	resp := s.repo.GetSuperheroeById(id)
-	if resp == nil {
-		return nil, fmt.Errorf("no superheroe with id %v found", id)
+	resp, err := s.repo.GetSuperheroeById(id)
+	if err != nil {
+		level.Error(s.logger).Log("getById error:", err)
+		return nil, err
 	}
 
-	s.logger.Log("get superheroe by id", id)
+	s.logger.Log("getById", id)
 	return resp, nil
 }
 
@@ -71,15 +71,11 @@ func (s *service) Add(_ context.Context, c *entity.Superheroe) (*entity.Superher
 
 //Edit a superheroe
 func (s *service) Edit(_ context.Context, c *entity.Superheroe) (*entity.Superheroe, error) {
-	resp := s.repo.GetSuperheroes()
-
-	exists := util.SuperheroeExists(resp, c.ID)
-	if exists == false {
-		level.Error(s.logger).Log("edit superheroe error:", fmt.Sprintf("Superheroe with ID %v does not exist", c.ID))
-		return nil, fmt.Errorf("Superheroe with ID %v does not exist", c.ID)
+	heroe, err := s.repo.EditSuperheroe(c)
+	if err != nil {
+		level.Error(s.logger).Log("edit superheroe error:", err)
+		return nil, err
 	}
-
-	heroe := s.repo.EditSuperheroe(c)
 	s.logger.Log("edit superheroe", heroe.ID, heroe.Name)
 
 	return heroe, nil
@@ -87,15 +83,11 @@ func (s *service) Edit(_ context.Context, c *entity.Superheroe) (*entity.Superhe
 
 //Delete delete a superheroe
 func (s *service) Delete(_ context.Context, id string) (string, error) {
-	resp := s.repo.GetSuperheroes()
-
-	exists := util.SuperheroeExists(resp, id)
-	if exists == false {
-		level.Error(s.logger).Log("delete superheroe error:", fmt.Sprintf("Superheroe with ID %v does not exist", id))
-		return "", fmt.Errorf("Superheroe with ID %v does not exist", id)
+	response, err := s.repo.DeleteSuperheroe(id)
+	if err != nil {
+		level.Error(s.logger).Log("delete superheroe error:", err)
+		return "", err
 	}
-
-	response := s.repo.DeleteSuperheroe(id)
 	s.logger.Log("delete superheroe", id)
 
 	return response, nil
