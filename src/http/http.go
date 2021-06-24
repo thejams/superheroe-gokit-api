@@ -53,7 +53,7 @@ func NewHTTPServer(ctx context.Context, endpoints endpoint.Endpoints) http.Handl
 }
 
 func decodeRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req entity.Superheroe
+	var req *entity.Superheroe
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func decodeIDRequest(ctx context.Context, r *http.Request) (interface{}, error) 
 }
 
 func decodeIDBodyRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req entity.Superheroe
+	var req *entity.Superheroe
 	vars := mux.Vars(r)
 
 	id := vars["id"]

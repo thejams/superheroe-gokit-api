@@ -21,9 +21,9 @@ var (
 
 func init() {
 	batman = entity.Superheroe{
-		ID:    "1",
-		Name:  "Batman",
-		Alias: "Bruce Wayne",
+		ID:        "1",
+		Name:      "Batman",
+		Publisher: "DC",
 	}
 	sh = []*entity.Superheroe{&batman}
 
@@ -46,7 +46,7 @@ func TestGetAll(t *testing.T) {
 		result, _ := svc.GetAll(context.TODO())
 
 		assert.Equal(t, "Batman", result[0].Name)
-		assert.Equal(t, "Bruce Wayne", result[0].Alias)
+		assert.Equal(t, "DC", result[0].Publisher)
 		assert.Equal(t, "1", result[0].ID)
 	})
 }
@@ -69,29 +69,21 @@ func TestGetByID(t *testing.T) {
 		result, _ := svc.GetByID(context.TODO(), "1")
 
 		assert.Equal(t, "Batman", result.Name)
-		assert.Equal(t, "Bruce Wayne", result.Alias)
+		assert.Equal(t, "DC", result.Publisher)
 		assert.Equal(t, "1", result.ID)
 	})
 }
 
 func TestAdd(t *testing.T) {
-	t.Run("should return when alias or name of heroe already exists", func(t *testing.T) {
+	t.Run("should return when name of heroe already exists", func(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
 		nh := entity.Superheroe{
-			Name:  "Iron Man",
-			Alias: "Bruce Wayne",
+			Name:      "Batman",
+			Publisher: "DC",
 		}
 		mockRepo.On("GetSuperheroes").Return(sh)
 		_, err := svc.Add(context.TODO(), &nh)
-
-		assert.NotNil(t, err)
-
-		nh = entity.Superheroe{
-			Name:  "Batman",
-			Alias: "Tony Stark",
-		}
-		_, err = svc.Add(context.TODO(), &nh)
 
 		assert.NotNil(t, err)
 	})
@@ -100,24 +92,24 @@ func TestAdd(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
 		nh := entity.Superheroe{
-			Name:  "Superman",
-			Alias: "Clark Kent",
+			Name:      "Superman",
+			Publisher: "DC",
 		}
 		mockRepo.On("GetSuperheroes").Return(sh)
 		mockRepo.On("AddSuperheroe", &nh).Return(&nh)
 		result, _ := svc.Add(context.TODO(), &nh)
 
 		assert.Equal(t, "Superman", result.Name)
-		assert.Equal(t, "Clark Kent", result.Alias)
+		assert.Equal(t, "DC", result.Publisher)
 	})
 }
 
 func TestEdit(t *testing.T) {
 	t.Run("should return error when heroe does not exists", func(t *testing.T) {
 		nh := entity.Superheroe{
-			ID:    "2",
-			Name:  "Superman",
-			Alias: "Clark Kent",
+			ID:        "2",
+			Name:      "Superman",
+			Publisher: "DC",
 		}
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
@@ -132,15 +124,15 @@ func TestEdit(t *testing.T) {
 		mockRepo := new(repoMock.Repository)
 		svc := service.NewService(mockRepo, logger)
 		nh := entity.Superheroe{
-			ID:    "1",
-			Name:  "Superman",
-			Alias: "Clark Kent",
+			ID:        "1",
+			Name:      "Superman",
+			Publisher: "DC",
 		}
 		mockRepo.On("EditSuperheroe", &nh).Return(&nh, nil)
 		result, _ := svc.Edit(context.TODO(), &nh)
 
 		assert.Equal(t, "Superman", result.Name)
-		assert.Equal(t, "Clark Kent", result.Alias)
+		assert.Equal(t, "DC", result.Publisher)
 	})
 }
 
@@ -189,8 +181,8 @@ func BenchmarkAdd(b *testing.B) {
 	mockRepo := new(repoMock.Repository)
 	svc := service.NewService(mockRepo, logger)
 	nh := entity.Superheroe{
-		Name:  "Superman",
-		Alias: "Clark Kent",
+		Name:      "Superman",
+		Publisher: "DC",
 	}
 	mockRepo.On("GetSuperheroes").Return(sh)
 	mockRepo.On("AddSuperheroe", &nh).Return(&nh)
@@ -204,9 +196,9 @@ func BenchmarkEdit(b *testing.B) {
 	mockRepo := new(repoMock.Repository)
 	svc := service.NewService(mockRepo, logger)
 	nh := entity.Superheroe{
-		ID:    "1",
-		Name:  "Superman",
-		Alias: "Clark Kent",
+		ID:        "1",
+		Name:      "Superman",
+		Publisher: "DC",
 	}
 	mockRepo.On("EditSuperheroe", &nh).Return(&nh)
 	mockRepo.On("GetSuperheroes").Return(sh)

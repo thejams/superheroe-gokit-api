@@ -21,13 +21,34 @@ type Endpoints struct {
 
 //MakeEndpoints initialice a new set of endpoints
 func MakeEndpoints(s service.Service) Endpoints {
+	var (
+		GetAll  endpoint.Endpoint
+		GetByID endpoint.Endpoint
+		Add     endpoint.Endpoint
+		Edit    endpoint.Endpoint
+		Delete  endpoint.Endpoint
+		Health  endpoint.Endpoint
+	)
+
+	{
+		Health = makeHealthEndpoint(s)
+		GetAll = makeGetSuperheroesEndpoint(s)
+		Delete = makeDeleteSuperheroeEndpoint(s)
+		GetByID = makeGetSuperheroeByIdEndpoint(s)
+
+		Add = makeAddSuperheroeEndpoint(s)
+		Add = ValidateFields()(Add)
+
+		Edit = makeEditSuperheroeEndpoint(s)
+		Edit = ValidateFields()(Edit)
+	}
 	return Endpoints{
-		GetAll:  makeGetSuperheroesEndpoint(s),
-		GetByID: makeGetSuperheroeByIdEndpoint(s),
-		Add:     makeAddSuperheroeEndpoint(s),
-		Edit:    makeEditSuperheroeEndpoint(s),
-		Delete:  makeDeleteSuperheroeEndpoint(s),
-		Health:  makeHealthEndpoint(s),
+		GetAll,
+		GetByID,
+		Add,
+		Edit,
+		Delete,
+		Health,
 	}
 }
 
@@ -58,8 +79,8 @@ func makeGetSuperheroeByIdEndpoint(svc service.Service) endpoint.Endpoint {
 
 func makeAddSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
-		req := in.(entity.Superheroe)
-		s, err := svc.Add(ctx, &req)
+		req := in.(*entity.Superheroe)
+		s, err := svc.Add(ctx, req)
 		if err != nil {
 			return nil, err
 		}
@@ -70,8 +91,8 @@ func makeAddSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 
 func makeEditSuperheroeEndpoint(svc service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, in interface{}) (interface{}, error) {
-		req := in.(entity.Superheroe)
-		s, err := svc.Edit(ctx, &req)
+		req := in.(*entity.Superheroe)
+		s, err := svc.Edit(ctx, req)
 		if err != nil {
 			return nil, err
 		}

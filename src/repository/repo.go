@@ -28,12 +28,17 @@ type repository struct {
 //NewRepository initialice a new repository with clean data
 func NewRepository(logger log.Logger) Repository {
 	uuid, _ := uuid.NewV4()
-	a1 := entity.Superheroe{
-		ID:    uuid.String(),
-		Name:  "Thor",
-		Alias: "Thor Odinson",
+	thor := entity.Superheroe{
+		ID:        uuid.String(),
+		Name:      "Thor",
+		Publisher: "Marvel",
 	}
-	resp = append(resp, &a1)
+	joker := entity.Superheroe{
+		ID:        uuid.String(),
+		Name:      "The Joker",
+		Publisher: "DC",
+	}
+	resp = append(resp, &thor, &joker)
 
 	return &repository{
 		logger: log.With(logger, "repo", "local"),

@@ -36,59 +36,63 @@ func NewService(rep repository.Repository, logger log.Logger) Service {
 
 //GetAll return all superheroes
 func (s *service) GetAll(context.Context) ([]*entity.Superheroe, error) {
-	s.logger.Log("get superheroes")
+	logger := log.With(s.logger, "method", "GetAll")
+	logger.Log("superheroes returned")
 	return s.repo.GetSuperheroes(), nil
 }
 
 //GetAll return a single superheroe
 func (s *service) GetByID(_ context.Context, id string) (*entity.Superheroe, error) {
+	logger := log.With(s.logger, "method", "GetByID")
 	resp, err := s.repo.GetSuperheroeById(id)
 	if err != nil {
 		level.Error(s.logger).Log("getById error:", err)
 		return nil, err
 	}
 
-	s.logger.Log("getById", id)
+	logger.Log("superheroe returned", id)
 	return resp, nil
 }
 
 //GetAll add a new superheroe
 func (s *service) Add(_ context.Context, c *entity.Superheroe) (*entity.Superheroe, error) {
+	logger := log.With(s.logger, "method", "Add")
 	resp := s.repo.GetSuperheroes()
 	err := util.VerifySuperheroe(resp, *c)
 	if err != nil {
-		level.Error(s.logger).Log("add superheroe error:", err)
+		level.Error(logger).Log("err", err)
 		return nil, err
 	}
 
 	uuid, _ := uuid.NewV4()
 	c.ID = uuid.String()
 	s.repo.AddSuperheroe(c)
-	s.logger.Log("add superheroe", c.Name)
-
+	logger.Log("superheroe added", c.Name)
 	return c, nil
 }
 
 //Edit a superheroe
 func (s *service) Edit(_ context.Context, c *entity.Superheroe) (*entity.Superheroe, error) {
+	logger := log.With(s.logger, "method", "Edit")
 	heroe, err := s.repo.EditSuperheroe(c)
 	if err != nil {
-		level.Error(s.logger).Log("edit superheroe error:", err)
+		level.Error(logger).Log("err", err)
 		return nil, err
 	}
-	s.logger.Log("edit superheroe", heroe.ID, heroe.Name)
 
+	logger.Log("superheroe edited", heroe.ID, heroe.Name)
 	return heroe, nil
 }
 
 //Delete delete a superheroe
 func (s *service) Delete(_ context.Context, id string) (string, error) {
+	logger := log.With(s.logger, "method", "Delete")
 	response, err := s.repo.DeleteSuperheroe(id)
 	if err != nil {
-		level.Error(s.logger).Log("delete superheroe error:", err)
+		level.Error(logger).Log("err", err)
 		return "", err
 	}
-	s.logger.Log("delete superheroe", id)
 
+	logger.Log("superheroe deleted", id)
 	return response, nil
 }

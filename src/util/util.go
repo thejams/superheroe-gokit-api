@@ -12,9 +12,6 @@ func VerifySuperheroe(s []*entity.Superheroe, c entity.Superheroe) error {
 		if v.Name == c.Name {
 			return errors.New("Name is already taken")
 		}
-		if v.Alias == c.Alias {
-			return errors.New("Alias is already taken")
-		}
 	}
 	return nil
 }
