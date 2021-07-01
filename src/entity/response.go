@@ -5,12 +5,12 @@ type NormalResponse struct {
 }
 
 type Superheroes struct {
-	Superheroes []*Superheroe `json:"superheroes"`
-	Error       error         `json:"error" validate:"omitempty"`
+	Superheroes []*Superheroe `json:"superheroes,omitempty"`
+	Error       error         `json:"error,omitempty"`
 }
 
 type SuperheroeResponse struct {
-	Msg        string      `json:"msg"`
-	Superheroe *Superheroe `json:"superheroe"`
-	Error      error       `json:"error" validate:"omitempty"`
+	Msg        string      `json:"msg,omitempty"`
+	Superheroe *Superheroe `json:"superheroe,omitempty"`
+	Error      error       `json:"error,omitempty"`
 }

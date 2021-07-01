@@ -100,8 +100,7 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 }
 
 func encodeSuperheroesResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	f, ok := response.(*entity.Superheroes)
-	if ok && f.Error != nil {
+	if f, ok := response.(*entity.Superheroes); ok && f.Error != nil {
 		status, msg := util.Error2Wrapper(f.Error)
 		w.WriteHeader(status)
 		return json.NewEncoder(w).Encode(msg)
@@ -110,8 +109,8 @@ func encodeSuperheroesResponse(ctx context.Context, w http.ResponseWriter, respo
 }
 
 func encodeSuperheroeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	f, ok := response.(*entity.SuperheroeResponse)
-	if ok && f.Error != nil {
+
+	if f, ok := response.(*entity.SuperheroeResponse); ok && f.Error != nil {
 		status, msg := util.Error2Wrapper(f.Error)
 		w.WriteHeader(status)
 		return json.NewEncoder(w).Encode(msg)

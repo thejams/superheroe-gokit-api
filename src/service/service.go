@@ -40,8 +40,6 @@ func (s *service) GetAll(context.Context) (*entity.Superheroes, error) {
 	logger.Log("superheroes returned")
 	resp := s.repo.GetSuperheroes()
 	return &entity.Superheroes{Superheroes: resp}, nil
-	//err := util.BadRequestError{Message: fmt.Sprintf("Los siguientes campos son requeridos: ")}
-	//return &entity.Superheroes{Error: &err}, nil
 }
 
 //GetAll return a single superheroe
@@ -50,7 +48,6 @@ func (s *service) GetByID(_ context.Context, id string) (*entity.SuperheroeRespo
 	resp, err := s.repo.GetSuperheroeById(id)
 	if err != nil {
 		level.Error(s.logger).Log("getById error:", err)
-		// return nil, err
 		return &entity.SuperheroeResponse{Error: err}, nil
 	}
 
@@ -81,12 +78,10 @@ func (s *service) Edit(_ context.Context, c *entity.Superheroe) (*entity.Superhe
 	heroe, err := s.repo.EditSuperheroe(c)
 	if err != nil {
 		level.Error(logger).Log("err", err)
-		// return nil, err
 		return &entity.SuperheroeResponse{Error: err}, nil
 	}
 
 	logger.Log("superheroe edited", heroe.ID, heroe.Name)
-	// return heroe, nil
 	return &entity.SuperheroeResponse{Superheroe: heroe}, nil
 }
 
@@ -96,11 +91,9 @@ func (s *service) Delete(_ context.Context, id string) (*entity.SuperheroeRespon
 	response, err := s.repo.DeleteSuperheroe(id)
 	if err != nil {
 		level.Error(logger).Log("err", err)
-		// return "", err
 		return &entity.SuperheroeResponse{Error: err}, nil
 	}
 
 	logger.Log("superheroe deleted", id)
-	// return response, nil
 	return &entity.SuperheroeResponse{Msg: response}, nil
 }
