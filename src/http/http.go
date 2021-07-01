@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"superheroe-gokit-api/src/endpoint"
 	"superheroe-gokit-api/src/entity"
+	"superheroe-gokit-api/src/util"
 
 	httptransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
@@ -26,12 +27,12 @@ func NewHTTPServer(ctx context.Context, endpoints endpoint.Endpoints) http.Handl
 	r.Methods("GET").Path("/superheroes/{id}").Handler(httptransport.NewServer(
 		endpoints.GetByID,
 		decodeIDRequest,
-		encodeResponse,
+		encodeSuperheroeResponse,
 	))
 	r.Methods("GET").Path("/superheroes").Handler(httptransport.NewServer(
 		endpoints.GetAll,
 		DecodeEmptyRequest,
-		encodeResponse,
+		encodeSuperheroesResponse,
 	))
 	r.Methods("POST").Path("/superheroes").Handler(httptransport.NewServer(
 		endpoints.Add,
@@ -41,12 +42,12 @@ func NewHTTPServer(ctx context.Context, endpoints endpoint.Endpoints) http.Handl
 	r.Methods("PUT").Path("/superheroes/{id}").Handler(httptransport.NewServer(
 		endpoints.Edit,
 		decodeIDBodyRequest,
-		encodeResponse,
+		encodeSuperheroeResponse,
 	))
 	r.Methods("DELETE").Path("/superheroes/{id}").Handler(httptransport.NewServer(
 		endpoints.Delete,
 		decodeIDRequest,
-		encodeResponse,
+		encodeSuperheroeResponse,
 	))
 
 	return r
@@ -98,9 +99,37 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 	return json.NewEncoder(w).Encode(response)
 }
 
+func encodeSuperheroesResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	f, ok := response.(*entity.Superheroes)
+	if ok && f.Error != nil {
+		status, msg := util.Error2Wrapper(f.Error)
+		w.WriteHeader(status)
+		return json.NewEncoder(w).Encode(msg)
+	}
+	return json.NewEncoder(w).Encode(response)
+}
+
+func encodeSuperheroeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	f, ok := response.(*entity.SuperheroeResponse)
+	if ok && f.Error != nil {
+		status, msg := util.Error2Wrapper(f.Error)
+		w.WriteHeader(status)
+		return json.NewEncoder(w).Encode(msg)
+	}
+	return json.NewEncoder(w).Encode(response)
+}
+
 func commonMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+		/* var buf bytes.Buffer
+		json.NewEncoder(&buf).Encode(util.InputError{
+			Message: "Todo Mal",
+		})
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(buf.Bytes()) */
+
 		next.ServeHTTP(w, r)
 	})
 }

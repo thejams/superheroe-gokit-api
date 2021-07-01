@@ -4,6 +4,7 @@ package repository
 import (
 	"fmt"
 	"superheroe-gokit-api/src/entity"
+	"superheroe-gokit-api/src/util"
 
 	"github.com/go-kit/kit/log"
 	"github.com/gofrs/uuid"
@@ -57,7 +58,8 @@ func (r *repository) GetSuperheroeById(i string) (*entity.Superheroe, error) {
 			return value, nil
 		}
 	}
-	return nil, fmt.Errorf("no superheroe with id %v found", i)
+	// return nil, fmt.Errorf("no superheroe with id %v found", i)
+	return nil, &util.NotFoundError{Message: fmt.Sprintf("no superheroe with id %v found", i)}
 }
 
 //AddSuperheroe add a new superheroe to the superheroes slice
@@ -75,7 +77,8 @@ func (r *repository) EditSuperheroe(c *entity.Superheroe) (*entity.Superheroe, e
 			return c, nil
 		}
 	}
-	return nil, fmt.Errorf("Superheroe with ID %v does not exist", c.ID)
+	// return nil, fmt.Errorf("Superheroe with ID %v does not exist", c.ID)
+	return nil, &util.NotFoundError{Message: fmt.Sprintf("Superheroe with ID %v does not exist", c.ID)}
 }
 
 //DeleteSuperheroe remove a superheroe from the superheroes slice
@@ -86,7 +89,8 @@ func (r *repository) DeleteSuperheroe(id string) (string, error) {
 			return "Character deleted " + id, nil
 		}
 	}
-	return "", fmt.Errorf("Superheroe with ID %v does not exist", id)
+	// return "", fmt.Errorf("Superheroe with ID %v does not exist", id)
+	return "", &util.NotFoundError{Message: fmt.Sprintf("Superheroe with ID %v does not exist", id)}
 }
 
 //ClearRepository remove all superheroes from the superheroes slice
