@@ -28,7 +28,7 @@ type ErrorWrapper struct {
 	Message string `json:"message"`
 }
 
-func Error2Wrapper(err error) (status int, errBody interface{}) {
+func DecodeError(err error) (status int, errBody interface{}) {
 	switch err.(type) {
 	case *BadRequestError:
 		return http.StatusBadRequest, ErrorWrapper{Code: "400", Message: err.Error()}

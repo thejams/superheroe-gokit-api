@@ -101,19 +101,18 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 
 func encodeSuperheroesResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if f, ok := response.(*entity.Superheroes); ok && f.Error != nil {
-		status, msg := util.Error2Wrapper(f.Error)
+		status, err := util.DecodeError(f.Error)
 		w.WriteHeader(status)
-		return json.NewEncoder(w).Encode(msg)
+		return json.NewEncoder(w).Encode(err)
 	}
 	return json.NewEncoder(w).Encode(response)
 }
 
 func encodeSuperheroeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-
 	if f, ok := response.(*entity.SuperheroeResponse); ok && f.Error != nil {
-		status, msg := util.Error2Wrapper(f.Error)
+		status, err := util.DecodeError(f.Error)
 		w.WriteHeader(status)
-		return json.NewEncoder(w).Encode(msg)
+		return json.NewEncoder(w).Encode(err)
 	}
 	return json.NewEncoder(w).Encode(response)
 }
@@ -121,14 +120,6 @@ func encodeSuperheroeResponse(ctx context.Context, w http.ResponseWriter, respon
 func commonMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-
-		/* var buf bytes.Buffer
-		json.NewEncoder(&buf).Encode(util.InputError{
-			Message: "Todo Mal",
-		})
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(buf.Bytes()) */
-
 		next.ServeHTTP(w, r)
 	})
 }

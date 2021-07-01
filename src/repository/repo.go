@@ -58,7 +58,6 @@ func (r *repository) GetSuperheroeById(i string) (*entity.Superheroe, error) {
 			return value, nil
 		}
 	}
-	// return nil, fmt.Errorf("no superheroe with id %v found", i)
 	return nil, &util.NotFoundError{Message: fmt.Sprintf("no superheroe with id %v found", i)}
 }
 
@@ -77,7 +76,6 @@ func (r *repository) EditSuperheroe(c *entity.Superheroe) (*entity.Superheroe, e
 			return c, nil
 		}
 	}
-	// return nil, fmt.Errorf("Superheroe with ID %v does not exist", c.ID)
 	return nil, &util.NotFoundError{Message: fmt.Sprintf("Superheroe with ID %v does not exist", c.ID)}
 }
 
@@ -89,7 +87,6 @@ func (r *repository) DeleteSuperheroe(id string) (string, error) {
 			return "Character deleted " + id, nil
 		}
 	}
-	// return "", fmt.Errorf("Superheroe with ID %v does not exist", id)
 	return "", &util.NotFoundError{Message: fmt.Sprintf("Superheroe with ID %v does not exist", id)}
 }
 
