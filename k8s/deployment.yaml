@@ -18,6 +18,9 @@ spec:
       - name: superheroe-gokit-api
         image: superheroe-gokit-api
         imagePullPolicy: IfNotPresent
+        envFrom:
+          - configMapRef:
+              name: superheroe-gokit-api-cfg
         ports:
         - containerPort: 8080
         livenessProbe:

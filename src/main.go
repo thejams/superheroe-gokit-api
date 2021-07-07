@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
+	"strings"
 	"superheroe-gokit-api/src/endpoint"
 	server "superheroe-gokit-api/src/http"
 	"superheroe-gokit-api/src/repository"
@@ -19,7 +20,12 @@ import (
 )
 
 func main() {
-	var httpAddr = flag.String("http", ":8080", "http listen address")
+	port := os.Getenv("PORT")
+	if len(strings.TrimSpace(port)) == 0 {
+		port = ":8080"
+	}
+
+	var httpAddr = flag.String("http", port, "http listen address")
 	var logger log.Logger
 	{
 		logger = log.NewLogfmtLogger(os.Stderr)
