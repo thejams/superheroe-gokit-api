@@ -8,15 +8,22 @@ a simple go-kit api that provides information about superheroes
 
 - in the root of the proyect, execute docker-compose up and compose will carry all the hard work to activate the app
 
-# instalation with kubernetes
+# instalation with minikube and kubernetes
 
-- make sure to have installed minikube or any other local kubernetes cluster
+- make sure you have minikube and kubernetes already installed
 
-- in the root of the proyect run kubectl -f apply k8s/
+- execute the following steps
 
-- then describe the superheroe-gokit-api-svc and use that ip with 8080 port
+- create the docker image for the api with: docker build -t superheroe-gokit-api -f Dockerfile .
 
-- if you are using minikube, remember to apply a minikube tunnel in order to communicate with the cluster
+- generate all the kubernetes resources running: kubectl apply -f k8s/
+
+- the resources created by the previous command generate the following k8s resources: 
+
+- 1 deployment with 1 POD and 1 replicaset.
+- 1 service that allows the comunication with the POD.
+- 1 configmap for passing enviornment variables. 
+- 1 ingress to expose the APi outside the k8s cluster and a nginx-ingress-controller for supporting the ingress.
 
 # run without docker or docker compose
 
